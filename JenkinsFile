@@ -12,11 +12,16 @@ pipeline {
                 echo 'Building'
             }
         }
-        stage('Deploy') {
-            steps {
+        steps {
                 echo 'Deploying'
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'MyAWS',
+                    accessKeyVariable: 'AKIAU6GDUNA2MDWBPSOQ',
+                    secretKeyVariable: '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']]){
+                        sh(script: 'aws s3 cp /var/lib/jenkins/workspace/JenkinsPipeline/index.html s3://test-jenkins-naoki/')
+                }
             }
-        }
         stage('Test') {
             steps {
                 echo 'Testing'
